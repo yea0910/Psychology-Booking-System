@@ -1,6 +1,6 @@
 ConsultationID,LecturerID,StudentID,Date,Time,Duration,StudentFeedback,LecturerFeedback,Status,Location
-C001,L001,S01,2024-11-24,10:00,30,fuck you,,Past,Room 101
-C002,L002,,2024-11-25,11:00,30,,,Expired,Room 102
-C003,L003,,2024-11-25,12:00,30,,,Expired,Room 103
-C004,L004,,2024-12-10,11:00,30,,,Available,Room 102
-C005,L005,,2024-12-11,12:00,30,,,Available,Room 103
+C001,L01,S01,2024-11-24,10:00,30,fuck you,,Past,Room 101
+C002,L02,,2024-11-25,11:00,30,,,Expired,Room 102
+C003,L03,,2024-11-25,12:00,30,,,Expired,Room 103
+C004,L04,,2024-12-10,11:00,30,,,Available,Room 102
+C005,L05,,2024-12-11,12:00,30,,,Available,Room 103

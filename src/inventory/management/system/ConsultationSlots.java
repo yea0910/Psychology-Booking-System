@@ -58,12 +58,12 @@ public class ConsultationSlots extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         btnBook = new javax.swing.JButton();
         btnClose = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tableConsultation = new javax.swing.JTable();
+        jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addComponentListener(new java.awt.event.ComponentAdapter() {
@@ -73,27 +73,32 @@ public class ConsultationSlots extends javax.swing.JFrame {
         });
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jPanel1.setBackground(new java.awt.Color(204, 204, 255));
-
         jLabel1.setFont(new java.awt.Font("Franklin Gothic Heavy", 1, 36)); // NOI18N
         jLabel1.setText("Consultation Slots");
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 10, -1, -1));
 
-        btnBook.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnBook.setBackground(new java.awt.Color(23, 34, 77));
+        btnBook.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnBook.setForeground(new java.awt.Color(255, 255, 255));
         btnBook.setText("Book");
+        btnBook.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnBook.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnBookActionPerformed(evt);
             }
         });
+        getContentPane().add(btnBook, new org.netbeans.lib.awtextra.AbsoluteConstraints(321, 509, -1, -1));
 
-        btnClose.setBackground(new java.awt.Color(255, 102, 102));
-        btnClose.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnClose.setBackground(new java.awt.Color(255, 153, 153));
+        btnClose.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnClose.setText("Close");
+        btnClose.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnClose.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCloseActionPerformed(evt);
             }
         });
+        getContentPane().add(btnClose, new org.netbeans.lib.awtextra.AbsoluteConstraints(594, 509, -1, -1));
 
         tableConsultation.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -106,6 +111,11 @@ public class ConsultationSlots extends javax.swing.JFrame {
                 "Consultation ID", "Lecturer ID", "Student ID", "Date", "Time", "Duration", "Status", "Location"
             }
         ));
+        tableConsultation.setFocusable(false);
+        tableConsultation.setRowHeight(25);
+        tableConsultation.setSelectionBackground(new java.awt.Color(232, 57, 95));
+        tableConsultation.getTableHeader().setResizingAllowed(false);
+        tableConsultation.getTableHeader().setReorderingAllowed(false);
         tableConsultation.addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentShown(java.awt.event.ComponentEvent evt) {
                 tableConsultationComponentShown(evt);
@@ -113,40 +123,11 @@ public class ConsultationSlots extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(tableConsultation);
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap(34, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addGap(308, 308, 308))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 882, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(34, 34, 34))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(btnBook)
-                        .addGap(201, 201, 201)
-                        .addComponent(btnClose)
-                        .addGap(284, 284, 284))))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1)
-                .addGap(16, 16, 16)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 420, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(26, 26, 26)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnBook)
-                    .addComponent(btnClose))
-                .addContainerGap(88, Short.MAX_VALUE))
-        );
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(34, 63, 882, 420));
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 950, 620));
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/inventory/management/system/ConcultationSlots bg.png"))); // NOI18N
+        jLabel2.setText("jLabel2");
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 950, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -402,7 +383,7 @@ public class ConsultationSlots extends javax.swing.JFrame {
     private javax.swing.JButton btnBook;
     private javax.swing.JButton btnClose;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JPanel jPanel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tableConsultation;
     // End of variables declaration//GEN-END:variables
