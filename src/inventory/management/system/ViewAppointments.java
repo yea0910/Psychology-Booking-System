@@ -68,14 +68,14 @@ public class ViewAppointments extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
-        btnCancel = new javax.swing.JButton();
         btnreschedule = new javax.swing.JButton();
+        btnCancel = new javax.swing.JButton();
         btnFeedback = new javax.swing.JButton();
         btnClose = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tableAppointments = new javax.swing.JTable();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addComponentListener(new java.awt.event.ComponentAdapter() {
@@ -85,43 +85,48 @@ public class ViewAppointments extends javax.swing.JFrame {
         });
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jPanel1.setBackground(new java.awt.Color(255, 204, 204));
-
-        btnCancel.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        btnCancel.setText("Cancel Appointment");
-        btnCancel.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCancelActionPerformed(evt);
-            }
-        });
-
-        btnreschedule.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        btnreschedule.setBackground(new java.awt.Color(23, 34, 77));
+        btnreschedule.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnreschedule.setForeground(new java.awt.Color(255, 255, 255));
         btnreschedule.setText("Reschedule");
         btnreschedule.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnrescheduleActionPerformed(evt);
             }
         });
+        getContentPane().add(btnreschedule, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 510, -1, -1));
 
-        btnFeedback.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        btnCancel.setBackground(new java.awt.Color(23, 34, 77));
+        btnCancel.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnCancel.setForeground(new java.awt.Color(255, 255, 255));
+        btnCancel.setText("Cancel Appointment");
+        btnCancel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btnCancel, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 510, -1, -1));
+
+        btnFeedback.setBackground(new java.awt.Color(23, 34, 77));
+        btnFeedback.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnFeedback.setForeground(new java.awt.Color(255, 255, 255));
         btnFeedback.setText("Leave Feedback");
         btnFeedback.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnFeedbackActionPerformed(evt);
             }
         });
+        getContentPane().add(btnFeedback, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 510, -1, -1));
 
-        btnClose.setBackground(new java.awt.Color(255, 102, 102));
-        btnClose.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        btnClose.setBackground(new java.awt.Color(255, 153, 153));
+        btnClose.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnClose.setText("Close");
         btnClose.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCloseActionPerformed(evt);
             }
         });
-
-        jLabel1.setFont(new java.awt.Font("Franklin Gothic Heavy", 1, 36)); // NOI18N
-        jLabel1.setText("Appointments");
+        getContentPane().add(btnClose, new org.netbeans.lib.awtextra.AbsoluteConstraints(800, 510, -1, -1));
 
         tableAppointments.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -131,53 +136,22 @@ public class ViewAppointments extends javax.swing.JFrame {
                 "Consultation ID", "Lecturer ID", "Student ID", "Date", "Time", "Duration", "Student Feedback", "Lecturer Feedback", "Status", "Location"
             }
         ));
+        tableAppointments.setFocusable(false);
+        tableAppointments.setRowHeight(25);
+        tableAppointments.setSelectionBackground(new java.awt.Color(232, 57, 95));
+        tableAppointments.getTableHeader().setResizingAllowed(false);
+        tableAppointments.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(tableAppointments);
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(btnClose)
-                        .addGap(432, 432, 432))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addGap(338, 338, 338))))
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(34, 34, 34)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 883, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(187, 187, 187)
-                        .addComponent(btnCancel)
-                        .addGap(102, 102, 102)
-                        .addComponent(btnreschedule)
-                        .addGap(101, 101, 101)
-                        .addComponent(btnFeedback)))
-                .addContainerGap(33, Short.MAX_VALUE))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1)
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 420, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnCancel)
-                    .addComponent(btnreschedule)
-                    .addComponent(btnFeedback))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
-                .addComponent(btnClose)
-                .addGap(39, 39, 39))
-        );
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 60, 890, -1));
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 950, 620));
+        jLabel1.setFont(new java.awt.Font("Franklin Gothic Heavy", 1, 36)); // NOI18N
+        jLabel1.setText("Appointments");
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 10, -1, -1));
+
+        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/inventory/management/system/ViewAppointments bg.png"))); // NOI18N
+        jLabel3.setText("jLabel3");
+        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 950, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -438,7 +412,7 @@ public class ViewAppointments extends javax.swing.JFrame {
     private javax.swing.JButton btnFeedback;
     private javax.swing.JButton btnreschedule;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JPanel jPanel1;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tableAppointments;
     // End of variables declaration//GEN-END:variables

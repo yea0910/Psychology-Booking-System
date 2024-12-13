@@ -1,8 +1,8 @@
 package inventory.management.system;
 
-import inventory.management.system.LecturerLogin;
-import inventory.management.system.StudentLogin;
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import javax.swing.JOptionPane;
@@ -15,15 +15,88 @@ import javax.swing.JOptionPane;
  *
  * @author Aimy
  */
+// User class to encapsulate user-related details
+class User {
+
+    private String id;
+    private String name;
+    private String password;
+    private String role;
+
+    public User(String id, String name, String password, String role) {
+        this.id = id;
+        this.name = name;
+        this.password = password;
+        this.role = role;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public boolean validatePassword(String confirmPassword) {
+        return this.password.equals(confirmPassword);
+    }
+
+    public boolean isPasswordStrong() {
+        return this.password.length() >= 6;
+    }
+}
+
+// Service class to handle user registration logic
+class UserService {
+
+    private static final String FILE_NAME = "users.txt";
+
+    // Check if a user ID already exists
+    public boolean isUserIdExist(String id) throws IOException {
+        try (BufferedReader br = new BufferedReader(new FileReader(FILE_NAME))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] userDetails = line.split(",");
+                if (userDetails[0].equals(id)) { // Compare the ID field
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    // Register user after verifying ID uniqueness
+    public void registerUser(User user) throws IOException {
+        if (isUserIdExist(user.getId())) {
+            throw new IllegalArgumentException("ID already exists!");
+        }
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(FILE_NAME, true))) {
+            bw.write(user.getId() + "," + user.getName() + "," + user.getPassword() + "," + user.getRole() + "\n");
+        }
+    }
+}
+
+// UI class for SignUp functionality
 public class SignUp extends javax.swing.JFrame {
 
     private String role;
+    private UserService userService;
 
-    /**
-     * Creates new form SignUp
-     */
     public SignUp(String role) {
+        if (role == null || role.isEmpty()) {
+            throw new IllegalArgumentException("Role must be provided!");
+        }
         this.role = role;
+        this.userService = new UserService();
         initComponents();
         setLocationRelativeTo(null);
     }
@@ -37,7 +110,6 @@ public class SignUp extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        buttonGroup1 = new javax.swing.ButtonGroup();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -75,7 +147,11 @@ public class SignUp extends javax.swing.JFrame {
         jLabel6.setForeground(new java.awt.Color(255, 255, 255));
         jLabel6.setText("Confirm Password");
         getContentPane().add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 240, -1, -1));
+
+        txtPassword.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         getContentPane().add(txtPassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 190, 170, -1));
+
+        txtConfirmPassword.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         getContentPane().add(txtConfirmPassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 240, 170, -1));
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
@@ -87,6 +163,7 @@ public class SignUp extends javax.swing.JFrame {
         btnRegister.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnRegister.setForeground(new java.awt.Color(255, 255, 255));
         btnRegister.setText("Register");
+        btnRegister.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnRegister.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnRegisterActionPerformed(evt);
@@ -98,6 +175,7 @@ public class SignUp extends javax.swing.JFrame {
         btnLogin.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnLogin.setForeground(new java.awt.Color(255, 255, 255));
         btnLogin.setText("Login");
+        btnLogin.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnLogin.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnLoginActionPerformed(evt);
@@ -109,6 +187,7 @@ public class SignUp extends javax.swing.JFrame {
         btnReset.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnReset.setForeground(new java.awt.Color(255, 255, 255));
         btnReset.setText("Reset");
+        btnReset.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnReset.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnResetActionPerformed(evt);
@@ -116,6 +195,7 @@ public class SignUp extends javax.swing.JFrame {
         });
         getContentPane().add(btnReset, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 310, -1, -1));
 
+        txtID.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         txtID.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtIDActionPerformed(evt);
@@ -123,6 +203,7 @@ public class SignUp extends javax.swing.JFrame {
         });
         getContentPane().add(txtID, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 90, 170, -1));
 
+        txtName.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         txtName.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtNameActionPerformed(evt);
@@ -133,6 +214,7 @@ public class SignUp extends javax.swing.JFrame {
         btnClose.setBackground(new java.awt.Color(255, 153, 153));
         btnClose.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnClose.setText("Close");
+        btnClose.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnClose.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCloseActionPerformed(evt);
@@ -159,6 +241,8 @@ public class SignUp extends javax.swing.JFrame {
             return;
         }
 
+        User user = new User(id, name, password, role);
+
         if (!password.equals(confirmPassword)) {
             JOptionPane.showMessageDialog(this, "Passwords do not match!", "Error", JOptionPane.ERROR_MESSAGE);
             return;
@@ -169,8 +253,12 @@ public class SignUp extends javax.swing.JFrame {
             return;
         }
 
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter("users.txt", true))) {
-            bw.write(id + "," + name + "," + password + "," + role + "\n");
+        try {
+            if (userService.isUserIdExist(id)) {
+                JOptionPane.showMessageDialog(this, "ID already exists! Please use a different ID.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            userService.registerUser(user);
             JOptionPane.showMessageDialog(this, "Account created successfully as " + role + "!", "Success", JOptionPane.INFORMATION_MESSAGE);
 
             // Navigate to the appropriate login page based on role
@@ -181,7 +269,7 @@ public class SignUp extends javax.swing.JFrame {
             }
             dispose();
         } catch (IOException ex) {
-            JOptionPane.showMessageDialog(this, "Error saving file: " + ex.getMessage());
+            JOptionPane.showMessageDialog(this, "Error saving file: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnRegisterActionPerformed
 
@@ -259,7 +347,6 @@ public class SignUp extends javax.swing.JFrame {
     private javax.swing.JButton btnLogin;
     private javax.swing.JButton btnRegister;
     private javax.swing.JButton btnReset;
-    private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
