@@ -1,6 +1,12 @@
 ConsultationID,LecturerID,StudentID,Date,Time,Duration,StudentFeedback,LecturerFeedback,Status,Location
-C001,L01,S01,2024-11-24,10:00,30,fuck you,,Past,Room 101
-C002,L02,,2024-11-25,11:00,30,,,Expired,Room 102
-C003,L03,,2024-11-25,12:00,30,,,Expired,Room 103
-C004,L04,,2024-12-10,11:00,30,,,Available,Room 102
-C005,L05,,2024-12-11,12:00,30,,,Available,Room 103
+C001,L01,S01,2024-11-24,10:00,30,Good Session,,Past,Room 101
+C002,L02,S02,2024-11-25,11:00,30,Helpful insights,Provided detailed explanation,Past,Room 102
+C003,L03,S03,2024-11-25,12:00,30,Insightful,,Past,Room 103
+C004,L04,S04,2024-12-10,11:00,30,Interactive session,Engaged and attentive,Past,Room 102
+C005,L05,S05,2024-12-11,12:00,30,Not very clear,Needs improvement in clarity,Past,Room 103
+C006,L01,,2024-12-16,10:00,30,,,Available,Room 104
+C007,L02,,2024-12-17,11:00,30,,,Available,Room 105
+C008,L01,S01,2024-12-01,12:00,30,Great discussion,Well-prepared and professional,Past,Room 106
+C009,L04,S07,2024-12-02,09:00,30,Helpful and encouraging,Excellent support and guidance,Past,Room 107
+C010,L05,,2024-12-20,14:00,30,,,Available,Room 108
+C011,L05,S01,2024-12-20,14:00,30,,,Pending Approval,Room 109

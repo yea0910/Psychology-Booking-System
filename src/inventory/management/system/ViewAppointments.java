@@ -33,29 +33,38 @@ public class ViewAppointments extends javax.swing.JFrame {
     }
 
     private void loadAppointments() {
-        DefaultTableModel model = (DefaultTableModel) tableAppointments.getModel();
-        model.setRowCount(0); // Clear existing data
+        try (BufferedReader br = new BufferedReader(new FileReader("consultations.txt"))) {
+            DefaultTableModel model = (DefaultTableModel) tableAppointments.getModel();
+            model.setRowCount(0); // Clear existing rows
 
-        try (BufferedReader reader = new BufferedReader(new FileReader("consultations.txt"))) {
-            String line = reader.readLine(); // Skip the header
-            while ((line = reader.readLine()) != null) {
+            String line;
+            br.readLine(); // Skip header
+
+            while ((line = br.readLine()) != null) {
                 String[] data = line.split(",");
-
-                // Skip expired slots
-                if ("Expired".equalsIgnoreCase(data[8])) {
-                    continue; // Move to the next line
+                if (data.length != 10) {
+                    System.err.println("Skipping invalid row: " + line);
+                    continue;
                 }
 
-                // Only add slots that match the logged-in student
-                if (this.studentID.equals(data[2])) {
+                String consultationID = data[0];
+                String lecturerID = data[1];
+                String studentID = data[2]; // This is important to filter by studentID
+                String date = data[3];
+                String time = data[4];
+                String duration = data[5];
+                String status = data[8];
+                String location = data[9];
+
+                // Add only the student's consultations
+                if (studentID.equals(this.studentID) && status.equalsIgnoreCase("Booked")) {
                     model.addRow(new Object[]{
-                        data[0], data[1], data[2], data[3], data[4], data[5],
-                        data[6], data[7], data[8], data[9]
+                        consultationID, lecturerID, date, time, duration, status, location
                     });
                 }
             }
-        } catch (IOException ex) {
-            JOptionPane.showMessageDialog(this, "Error loading appointments: " + ex.getMessage());
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Error loading appointments: " + e.getMessage());
         }
     }
 
@@ -208,9 +217,6 @@ public class ViewAppointments extends javax.swing.JFrame {
                         JOptionPane.YES_NO_OPTION);
 
                 if (confirm == JOptionPane.YES_OPTION) {
-                    model.setValueAt("", selectedRow, 2); // Clear Student ID
-                    model.setValueAt("Available", selectedRow, 8); // Update Status to "Available"
-
                     try (BufferedReader reader = new BufferedReader(new FileReader("consultations.txt"))) {
                         List<String> lines = new ArrayList<>();
                         String line;
@@ -235,8 +241,8 @@ public class ViewAppointments extends javax.swing.JFrame {
                         }
 
                         JOptionPane.showMessageDialog(this, "Consultation slot cancelled successfully!");
-                        loadAppointments(); // Reload appointments after modifying the file
-
+                        model.setRowCount(0); // Clear table rows
+                        loadUserData(); // Reload appointments after modifying the file
                     } catch (IOException ex) {
                         JOptionPane.showMessageDialog(this, "Error updating file: " + ex.getMessage());
                     }
@@ -270,9 +276,8 @@ public class ViewAppointments extends javax.swing.JFrame {
                         JOptionPane.YES_NO_OPTION);
 
                 if (confirm == JOptionPane.YES_OPTION) {
-                    // Set the selected slot to "Available" and clear the student ID
-                    model.setValueAt("", selectedRow, 2); // Clear Student ID
-                    model.setValueAt("Available", selectedRow, 8); // Update Status to "Available"
+                    // Update status to "Pending Approval"
+                    model.setValueAt("Pending Approval", selectedRow, 8); // Update status in the table
 
                     try (BufferedReader reader = new BufferedReader(new FileReader("consultations.txt"))) {
                         List<String> lines = new ArrayList<>();
@@ -281,9 +286,8 @@ public class ViewAppointments extends javax.swing.JFrame {
                         while ((line = reader.readLine()) != null) {
                             String[] data = line.split(",");
                             if (data[0].equals(consultationID)) {
-                                // Update the line for the rescheduled consultation (cancel it)
-                                data[2] = ""; // Clear Student ID
-                                data[8] = "Available"; // Set Status to "Available"
+                                // Update the line for the rescheduled consultation
+                                data[8] = "Pending Approval"; // Set Status to "Pending Approval"
                                 line = String.join(",", data); // Rebuild the line
                             }
                             lines.add(line); // Add updated or unchanged line
@@ -297,12 +301,10 @@ public class ViewAppointments extends javax.swing.JFrame {
                             }
                         }
 
-                        // Inform the user that the consultation was rescheduled (cancelled) successfully
-                        JOptionPane.showMessageDialog(this, "Consultation rescheduled successfully!");
-
-                        // Redirect to ConsultationSlots page
-                        setVisible(false);
-                        new ConsultationSlots(this.studentID).setVisible(true);
+                        // Inform the user that the reschedule request was successful
+                        JOptionPane.showMessageDialog(this, "Reschedule request submitted successfully!");
+                        model.setRowCount(0);
+                        loadUserData();
 
                     } catch (IOException ex) {
                         JOptionPane.showMessageDialog(this, "Error updating file: " + ex.getMessage());
