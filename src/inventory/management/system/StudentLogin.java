@@ -1,8 +1,5 @@
-
 package inventory.management.system;
 
-import java.io.FileReader;
-import java.util.Scanner;
 import javax.swing.JOptionPane;
 
 /*
@@ -13,8 +10,9 @@ import javax.swing.JOptionPane;
  *
  * @author Aimy
  */
-
 public class StudentLogin extends javax.swing.JFrame {
+
+    private final LoginService loginService;
 
     /**
      * Creates new form Login
@@ -22,6 +20,7 @@ public class StudentLogin extends javax.swing.JFrame {
     public StudentLogin() {
         initComponents();
         setLocationRelativeTo(null);
+        loginService = new LoginService();
     }
 
     /**
@@ -130,30 +129,19 @@ public class StudentLogin extends javax.swing.JFrame {
             return;
         }
 
-        boolean loginSuccess = false;
-        try (FileReader fr = new FileReader("users.txt"); Scanner reader = new Scanner(fr)) {
-            reader.useDelimiter("[,\n]");
+        try {
+            // Validate login with role "student"
+            User user = loginService.validateLoginByRole(ID, password, "student");
 
-            while (reader.hasNext()) {
-                String id = reader.next().trim();
-                String name = reader.next().trim();
-                String pw = reader.next().trim();
-                String role = reader.next().trim();
-
-                if (ID.equals(id) && password.equals(pw) && "student".equalsIgnoreCase(role)) {
-                    loginSuccess = true;
-                    JOptionPane.showMessageDialog(this, "Login Successful! Welcome " + name, "Success", JOptionPane.INFORMATION_MESSAGE);
-                    new StudentHomepage(ID).setVisible(true);  // Open Student Homepage
-                    this.dispose();
-                    break;
-                }
-            }
-
-            if (!loginSuccess) {
-                JOptionPane.showMessageDialog(this, "Invalid Username, Password, or Role!", "Error", JOptionPane.ERROR_MESSAGE);
+            if (user != null) {
+                JOptionPane.showMessageDialog(this, "Login Successful! Welcome " + user.getName(), "Success", JOptionPane.INFORMATION_MESSAGE);
+                new StudentHomepage(user.getId()).setVisible(true); // Navigate to Student Homepage
+                this.dispose();
+            } else {
+                JOptionPane.showMessageDialog(this, "Invalid ID, Password, or Role!", "Error", JOptionPane.ERROR_MESSAGE);
             }
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Error reading users file: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnLoginActionPerformed
 
@@ -171,46 +159,45 @@ public class StudentLogin extends javax.swing.JFrame {
 
     private void btnSignUpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSignUpActionPerformed
         // TODO add your handling code here:
-        setVisible(false);
+        this.setVisible(false);
         new SignUp("student").setVisible(true);
-        this.dispose();
     }//GEN-LAST:event_btnSignUpActionPerformed
 
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-    /* Set the Nimbus look and feel */
-    //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-    /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-     */
-    try {
-        for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-            if ("Nimbus".equals(info.getName())) {
-                javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                break;
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
             }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(StudentLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(StudentLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(StudentLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(StudentLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-    } catch (ClassNotFoundException ex) {
-        java.util.logging.Logger.getLogger(StudentLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-    } catch (InstantiationException ex) {
-        java.util.logging.Logger.getLogger(StudentLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-    } catch (IllegalAccessException ex) {
-        java.util.logging.Logger.getLogger(StudentLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-    } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-        java.util.logging.Logger.getLogger(StudentLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-    }
-    //</editor-fold>
-    //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
 
-    /* Create and display the form */
-    java.awt.EventQueue.invokeLater(new Runnable() {
-        public void run() {
-            new StudentLogin().setVisible(true);
-        }
-    });
-}
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new StudentLogin().setVisible(true);
+            }
+        });
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnClose;

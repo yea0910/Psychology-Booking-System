@@ -11,11 +11,13 @@ import javax.swing.JOptionPane;
  * @author Aimy
  */
 public class LecturerHomepage extends javax.swing.JFrame {
-
+    private String lecturerID;
+//    from where??
     /**
      * Creates new form Homepage
      */
     public LecturerHomepage(String lecturerID) {
+        this.lecturerID = lecturerID;
         initComponents();
         setLocationRelativeTo(null);
     }
@@ -30,16 +32,14 @@ public class LecturerHomepage extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
         btnUser = new javax.swing.JButton();
-        btnItems = new javax.swing.JButton();
-        btnSuppliers = new javax.swing.JButton();
+        btnConsultationSlots = new javax.swing.JButton();
+        btnViewAppointments = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        jPanel1.setBackground(new java.awt.Color(204, 255, 204));
 
         btnUser.setBackground(new java.awt.Color(153, 255, 255));
         btnUser.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -49,26 +49,29 @@ public class LecturerHomepage extends javax.swing.JFrame {
                 btnUserActionPerformed(evt);
             }
         });
+        getContentPane().add(btnUser, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 30, -1, -1));
 
-        btnItems.setBackground(new java.awt.Color(51, 51, 255));
-        btnItems.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        btnItems.setForeground(new java.awt.Color(255, 255, 255));
-        btnItems.setText("Consultation Slots");
-        btnItems.addActionListener(new java.awt.event.ActionListener() {
+        btnConsultationSlots.setBackground(new java.awt.Color(51, 51, 255));
+        btnConsultationSlots.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnConsultationSlots.setForeground(new java.awt.Color(255, 255, 255));
+        btnConsultationSlots.setText("Consultation Slots");
+        btnConsultationSlots.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnItemsActionPerformed(evt);
+                btnConsultationSlotsActionPerformed(evt);
             }
         });
+        getContentPane().add(btnConsultationSlots, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 30, -1, -1));
 
-        btnSuppliers.setBackground(new java.awt.Color(255, 51, 51));
-        btnSuppliers.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        btnSuppliers.setForeground(new java.awt.Color(255, 255, 255));
-        btnSuppliers.setText("View Appoinments");
-        btnSuppliers.addActionListener(new java.awt.event.ActionListener() {
+        btnViewAppointments.setBackground(new java.awt.Color(255, 51, 51));
+        btnViewAppointments.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnViewAppointments.setForeground(new java.awt.Color(255, 255, 255));
+        btnViewAppointments.setText("View Appoinments");
+        btnViewAppointments.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSuppliersActionPerformed(evt);
+                btnViewAppointmentsActionPerformed(evt);
             }
         });
+        getContentPane().add(btnViewAppointments, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 30, -1, -1));
 
         jButton1.setBackground(new java.awt.Color(255, 153, 153));
         jButton1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -78,34 +81,11 @@ public class LecturerHomepage extends javax.swing.JFrame {
                 jButton1ActionPerformed(evt);
             }
         });
+        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 30, -1, -1));
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(138, 138, 138)
-                .addComponent(btnUser)
-                .addGap(80, 80, 80)
-                .addComponent(btnItems)
-                .addGap(80, 80, 80)
-                .addComponent(btnSuppliers)
-                .addGap(80, 80, 80)
-                .addComponent(jButton1)
-                .addContainerGap(141, Short.MAX_VALUE))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(6, 6, 6)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnItems)
-                    .addComponent(btnUser)
-                    .addComponent(btnSuppliers)
-                    .addComponent(jButton1)))
-        );
-
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 980, 830));
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/inventory/management/system/homepage bg.png"))); // NOI18N
+        jLabel1.setText("jLabel1");
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, -90, 1060, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -115,17 +95,19 @@ public class LecturerHomepage extends javax.swing.JFrame {
         int a = JOptionPane.showConfirmDialog(null, "Do you want to logout system", "Select", JOptionPane.YES_NO_OPTION);
         if (a == 0) {
             setVisible(false);
-            new StudentLogin().setVisible(true);
+            new LecturerLogin().setVisible(true);
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void btnSuppliersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSuppliersActionPerformed
+    private void btnViewAppointmentsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewAppointmentsActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_btnSuppliersActionPerformed
+        new LecturerViewAppointments(lecturerID).setVisible(true);
+    }//GEN-LAST:event_btnViewAppointmentsActionPerformed
 
-    private void btnItemsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnItemsActionPerformed
+    private void btnConsultationSlotsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConsultationSlotsActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_btnItemsActionPerformed
+        new LecturerConsultationSlots(lecturerID).setVisible(true);
+    }//GEN-LAST:event_btnConsultationSlotsActionPerformed
 
     private void btnUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUserActionPerformed
         // TODO add your handling code here:
@@ -170,10 +152,10 @@ public class LecturerHomepage extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnItems;
-    private javax.swing.JButton btnSuppliers;
+    private javax.swing.JButton btnConsultationSlots;
     private javax.swing.JButton btnUser;
+    private javax.swing.JButton btnViewAppointments;
     private javax.swing.JButton jButton1;
-    private javax.swing.JPanel jPanel1;
+    private javax.swing.JLabel jLabel1;
     // End of variables declaration//GEN-END:variables
 }

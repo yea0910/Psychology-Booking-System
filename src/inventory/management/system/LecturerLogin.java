@@ -4,8 +4,6 @@
  */
 package inventory.management.system;
 
-import java.io.FileReader;
-import java.util.Scanner;
 import javax.swing.JOptionPane;
 
 /**
@@ -124,37 +122,28 @@ public class LecturerLogin extends javax.swing.JFrame {
             return;
         }
 
-        boolean loginSuccess = false;
-        try (FileReader fr = new FileReader("users.txt"); Scanner reader = new Scanner(fr)) {
-            reader.useDelimiter("[,\n]");
+        try {
+            // Create an instance of LoginService
+            LoginService loginService = new LoginService();
+            // Call the instance method
+            User user = loginService.validateLoginByRole(ID, password, "lecturer");
 
-            while (reader.hasNext()) {
-                String id = reader.next().trim();
-                String name = reader.next().trim();
-                String pw = reader.next().trim();
-                String role = reader.next().trim();
-
-                if (ID.equals(id) && password.equals(pw) && "lecturer".equalsIgnoreCase(role)) {
-                    loginSuccess = true;
-                    JOptionPane.showMessageDialog(this, "Login Successful! Welcome " + name, "Success", JOptionPane.INFORMATION_MESSAGE);
-                    new LecturerHomepage(ID).setVisible(true);
-                    this.dispose();
-                    break;
-                }
-            }
-
-            if (!loginSuccess) {
+            if (user != null) {
+                JOptionPane.showMessageDialog(this, "Login Successful! Welcome " + user.getName(), "Success", JOptionPane.INFORMATION_MESSAGE);
+                new LecturerHomepage(ID).setVisible(true); // Open Lecturer Homepage
+                this.dispose();
+            } else {
                 JOptionPane.showMessageDialog(this, "Invalid Username, Password, or Role!", "Error", JOptionPane.ERROR_MESSAGE);
             }
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Error reading users file: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnLoginActionPerformed
 
     private void btnSignUpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSignUpActionPerformed
         // TODO add your handling code here:
         setVisible(false);
-        new SignUp("lecturer").setVisible(true);  
+        new SignUp("lecturer").setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnSignUpActionPerformed
 

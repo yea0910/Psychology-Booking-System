@@ -102,13 +102,13 @@ public class ConsultationSlots extends javax.swing.JFrame {
 
         tableConsultation.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null}
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null}
             },
             new String [] {
-                "Consultation ID", "Lecturer ID", "Student ID", "Date", "Time", "Duration", "Status", "Location"
+                "Consultation ID", "Lecturer ID", "Date", "Time", "Duration", "Status", "Location"
             }
         ));
         tableConsultation.setFocusable(false);
@@ -149,7 +149,6 @@ public class ConsultationSlots extends javax.swing.JFrame {
                 // Parse fields
                 String consultationID = data[0];
                 String lecturerID = data[1];
-                String studentID = data[2];
                 String date = data[3];
                 String time = data[4];
                 String duration = data[5];
@@ -172,12 +171,10 @@ public class ConsultationSlots extends javax.swing.JFrame {
                     continue;
                 }
 
-                // Only add rows that match the student's ID or are available
+                // Only add rows that are available
                 if (status.equalsIgnoreCase("Available")) {
                     model.addRow(new Object[]{
-                        consultationID, lecturerID,
-                        studentID.isEmpty() ? "" : studentID,
-                        date, time, duration,
+                        consultationID, lecturerID, date, time, duration,
                         status.isEmpty() ? "" : status,
                         location
                     });
@@ -185,8 +182,6 @@ public class ConsultationSlots extends javax.swing.JFrame {
             }
         } catch (IOException e) {
             JOptionPane.showMessageDialog(this, "Error loading consultation slots: " + e.getMessage());
-        } catch (DateTimeParseException e) {
-            System.err.println("Invalid date or time format in consultations.txt");
         }
     }
 
@@ -245,7 +240,7 @@ public class ConsultationSlots extends javax.swing.JFrame {
         int selectedRow = tableConsultation.getSelectedRow();
 
         if (selectedRow != -1) {
-            String status = model.getValueAt(selectedRow, 6).toString();
+            String status = model.getValueAt(selectedRow, 5).toString();
 
             // Check if the status is not already "Booked"
             if (!status.equalsIgnoreCase("Booked")) {
@@ -253,8 +248,7 @@ public class ConsultationSlots extends javax.swing.JFrame {
                 String studentID = this.studentID; // Logged-in student ID
 
                 // Update the table model
-                model.setValueAt("Booked", selectedRow, 6);
-                model.setValueAt(studentID, selectedRow, 2);
+                model.setValueAt("Booked", selectedRow, 5);
 
                 // Save the changes back to the file
                 saveDataToFile();
@@ -263,7 +257,7 @@ public class ConsultationSlots extends javax.swing.JFrame {
                 loadConsultationSlots();
 
                 JOptionPane.showMessageDialog(this, "Consultation slot booked successfully!");
-                
+
                 setVisible(false);
                 new ViewAppointments(studentID).setVisible(true);
             } else {
@@ -297,14 +291,14 @@ public class ConsultationSlots extends javax.swing.JFrame {
                 String consultationID = model.getValueAt(i, 0).toString();
                 String updatedLine = consultationID + "," // ConsultationID
                         + model.getValueAt(i, 1) + "," // LecturerID
-                        + model.getValueAt(i, 2) + "," // StudentID
-                        + model.getValueAt(i, 3) + "," // Date
-                        + model.getValueAt(i, 4) + "," // Time
-                        + model.getValueAt(i, 5) + "," // Duration
+                        + (model.getValueAt(i, 5).toString().equals("Booked") ? studentID : "") + "," // StudentID (set to logged-in student's ID if booked)
+                        + model.getValueAt(i, 2) + "," // Date
+                        + model.getValueAt(i, 3) + "," // Time
+                        + model.getValueAt(i, 4) + "," // Duration
                         + "," // Empty StudentFeedback
                         + "," // Empty LecturerFeedback
-                        + model.getValueAt(i, 6) + "," // Status
-                        + model.getValueAt(i, 7);        // Location
+                        + model.getValueAt(i, 5) + "," // Status
+                        + model.getValueAt(i, 6);        // Location
 
                 // Replace the matching line or append a new one
                 boolean found = false;
