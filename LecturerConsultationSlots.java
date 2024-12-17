@@ -12,10 +12,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Date;
+import java.util.TreeMap;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -31,6 +32,7 @@ public class LecturerConsultationSlots extends javax.swing.JFrame {
     public LecturerConsultationSlots(String lecturerID) {
         this.lecturerID = lecturerID;
         initComponents();
+        setLocationRelativeTo(null);
         insertData();
         timeBoxValue();
         durationBoxValue();
@@ -48,6 +50,9 @@ public class LecturerConsultationSlots extends javax.swing.JFrame {
         model.setRowCount(0);
         
         SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        
+        // for sorting date time
+        TreeMap<Date, String> sortedConsultations = new TreeMap<>();
 
         // Skip the header line in the file
         String line = br.readLine(); // Assumes the first line is the header
@@ -70,8 +75,8 @@ public class LecturerConsultationSlots extends javax.swing.JFrame {
             String date = rowData[3].trim();
             String time = rowData[4].trim();
             String duration = rowData[5].trim();
-            String studentFeedback = rowData[6].trim();
-            String lecturerFeedback = rowData[7].trim();
+            //String studentFeedback = rowData[6].trim();
+            //String lecturerFeedback = rowData[7].trim();
             String status = rowData[8].trim();
             String location = rowData[9].trim();
             String dateTime = date + " " + time;
@@ -80,29 +85,47 @@ public class LecturerConsultationSlots extends javax.swing.JFrame {
                 Date consultationDate = dateTimeFormat.parse(dateTime);
                 Date currentDate = new Date(); // Current system date
 
-                // Skip past consultations
-                if (consultationDate.before(currentDate)) {
+                // Skip past consultations & booked & Pending
+                if (consultationDate.before(currentDate) || status.equalsIgnoreCase("Booked") || status.equalsIgnoreCase("Pending")) {
                     continue; // Skip past dates
                 }
-
+                
                 // Skip rows that do not belong to the current lecturer
                 if (!fileLecturerID.equalsIgnoreCase(this.lecturerID)) {
                     continue;
                 }
+                
+                sortedConsultations.put(consultationDate, line);
             
+                // above line for sort by date time, below for sort by consultation ID
+               
                 // Add the row to the table
-                model.addRow(new Object[] {
-                    consultationID, fileLecturerID, 
-                    studentID.isEmpty() ? "" : studentID,
-                    date, time, duration, 
-                    status.isEmpty() ? "Available" : status,
-                    location
-                });
+//                model.addRow(new Object[] {
+//                    consultationID, 
+//                    //fileLecturerID, 
+//                    //studentID.isEmpty() ? "" : studentID,
+//                    date, time, duration, 
+//                    status.isEmpty() ? "Available" : status,
+//                    location
+//                });
                 
             } catch (ParseException e) {
                 System.err.println("Invalid date-time format: " + e.getMessage());
             }
         }
+        
+        // line below for sorted by date time
+        for (String sortedLine : sortedConsultations.values()) {
+            String[] rowData = sortedLine.split(",");
+            model.addRow(new Object[] {
+                rowData[0], 
+                //rowData[1], 
+                //rowData[2].isEmpty() ? "" : rowData[2],
+                rowData[3], rowData[4], rowData[5], 
+                rowData[8].isEmpty() ? "Available" : rowData[8],
+                rowData[9]
+            });
+        } // until here
             
         } catch (IOException e) {
             // Show error message if there's an issue with the file
@@ -123,7 +146,6 @@ public class LecturerConsultationSlots extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-        jPanel1 = new javax.swing.JPanel();
         SlotsTitle = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         consultationSlots = new javax.swing.JTable();
@@ -133,17 +155,13 @@ public class LecturerConsultationSlots extends javax.swing.JFrame {
         LLocation = new javax.swing.JLabel();
         setConsultation = new javax.swing.JButton();
         clearButton = new javax.swing.JButton();
-        durationBox = new javax.swing.JComboBox<>();
         deleteButton = new javax.swing.JButton();
+        durationBox = new javax.swing.JComboBox<>();
         timeBox = new javax.swing.JComboBox<>();
         locationBox = new javax.swing.JComboBox<>();
         closeButton = new javax.swing.JButton();
+        jDateChooser = new com.toedter.calendar.JDateChooser();
         jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        dateBox = new javax.swing.JComboBox<>();
-        monthBox = new javax.swing.JComboBox<>();
-        yearBox = new javax.swing.JComboBox<>();
-        tfDate = new javax.swing.JTextField();
 
         jLabel1.setFont(new java.awt.Font("Franklin Gothic Heavy", 1, 36)); // NOI18N
         jLabel1.setText("Consultation Slots");
@@ -151,51 +169,79 @@ public class LecturerConsultationSlots extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(153, 153, 255));
         setForeground(new java.awt.Color(204, 204, 255));
-
-        jPanel1.setBackground(new java.awt.Color(204, 204, 255));
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         SlotsTitle.setFont(new java.awt.Font("Franklin Gothic Heavy", 1, 36)); // NOI18N
         SlotsTitle.setText("Consultation Slots");
         SlotsTitle.setPreferredSize(new java.awt.Dimension(333, 41));
+        getContentPane().add(SlotsTitle, new org.netbeans.lib.awtextra.AbsoluteConstraints(357, 15, -1, -1));
 
         consultationSlots.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null}
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
             },
             new String [] {
-                "Consultation ID", "Lecturer ID", "Student ID", "Date", "Time", "Duration", "Status", "Location"
+                "Consultation ID", "Date", "Time", "Duration", "Status", "Location"
             }
         ));
+        consultationSlots.setFocusable(false);
+        consultationSlots.setRowHeight(25);
+        consultationSlots.setSelectionBackground(new java.awt.Color(232, 57, 95));
         jScrollPane1.setViewportView(consultationSlots);
+
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(21, 62, 705, 491));
 
         LDate.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         LDate.setText("Date:");
+        getContentPane().add(LDate, new org.netbeans.lib.awtextra.AbsoluteConstraints(744, 85, -1, -1));
 
         LTime.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         LTime.setText("Time: ");
+        getContentPane().add(LTime, new org.netbeans.lib.awtextra.AbsoluteConstraints(744, 131, -1, -1));
 
         LDuration.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         LDuration.setText("Duration:");
+        getContentPane().add(LDuration, new org.netbeans.lib.awtextra.AbsoluteConstraints(744, 179, -1, -1));
 
         LLocation.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         LLocation.setText("Location:");
+        getContentPane().add(LLocation, new org.netbeans.lib.awtextra.AbsoluteConstraints(744, 227, -1, -1));
 
+        setConsultation.setBackground(new java.awt.Color(0, 51, 51));
+        setConsultation.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        setConsultation.setForeground(new java.awt.Color(255, 255, 255));
         setConsultation.setText("Set");
         setConsultation.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 setConsultationActionPerformed(evt);
             }
         });
+        getContentPane().add(setConsultation, new org.netbeans.lib.awtextra.AbsoluteConstraints(830, 340, -1, -1));
 
+        clearButton.setBackground(new java.awt.Color(0, 51, 51));
+        clearButton.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        clearButton.setForeground(new java.awt.Color(255, 255, 255));
         clearButton.setText("Clear");
         clearButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 clearButtonActionPerformed(evt);
             }
         });
+        getContentPane().add(clearButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(830, 290, -1, -1));
+
+        deleteButton.setBackground(new java.awt.Color(0, 51, 51));
+        deleteButton.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        deleteButton.setForeground(new java.awt.Color(255, 255, 255));
+        deleteButton.setText("Delete Row");
+        deleteButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteButtonActionPerformed(evt);
+            }
+        });
+        getContentPane().add(deleteButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(820, 390, -1, -1));
 
         durationBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         durationBox.addActionListener(new java.awt.event.ActionListener() {
@@ -203,140 +249,30 @@ public class LecturerConsultationSlots extends javax.swing.JFrame {
                 durationBoxActionPerformed(evt);
             }
         });
-
-        deleteButton.setText("Delete");
-        deleteButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                deleteButtonActionPerformed(evt);
-            }
-        });
+        getContentPane().add(durationBox, new org.netbeans.lib.awtextra.AbsoluteConstraints(818, 179, 169, -1));
 
         timeBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        getContentPane().add(timeBox, new org.netbeans.lib.awtextra.AbsoluteConstraints(818, 131, 169, -1));
 
         locationBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        getContentPane().add(locationBox, new org.netbeans.lib.awtextra.AbsoluteConstraints(817, 227, 169, -1));
 
+        closeButton.setBackground(new java.awt.Color(255, 153, 153));
+        closeButton.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         closeButton.setText("Close");
         closeButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 closeButtonActionPerformed(evt);
             }
         });
+        getContentPane().add(closeButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(830, 440, -1, -1));
 
-        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel3.setText("Month:");
+        jDateChooser.setDateFormatString("yyyy-MM-dd");
+        getContentPane().add(jDateChooser, new org.netbeans.lib.awtextra.AbsoluteConstraints(818, 85, 169, -1));
 
-        jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel4.setText("Year:");
-
-        dateBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-        monthBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-        yearBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(21, 21, 21)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 730, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(28, 28, 28)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(LTime)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addComponent(LDuration)
-                                        .addComponent(LLocation))
-                                    .addComponent(LDate)
-                                    .addComponent(jLabel3)
-                                    .addComponent(jLabel4))
-                                .addGap(18, 18, 18)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(deleteButton)
-                                    .addComponent(closeButton)
-                                    .addComponent(clearButton)
-                                    .addComponent(setConsultation)
-                                    .addComponent(locationBox, 0, 169, Short.MAX_VALUE)
-                                    .addComponent(durationBox, 0, 169, Short.MAX_VALUE)
-                                    .addComponent(timeBox, 0, 169, Short.MAX_VALUE)
-                                    .addComponent(tfDate)))))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(301, 301, 301)
-                        .addComponent(SlotsTitle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(18, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(dateBox, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(monthBox, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(yearBox, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(52, 52, 52))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(SlotsTitle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(76, 76, 76)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(LDate)
-                            .addComponent(tfDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel3)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel4)
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(timeBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(LTime))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(durationBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(LDuration))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(locationBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(LLocation))
-                        .addGap(29, 29, 29)
-                        .addComponent(setConsultation)
-                        .addGap(18, 18, 18)
-                        .addComponent(clearButton)
-                        .addGap(18, 18, 18)
-                        .addComponent(deleteButton)
-                        .addGap(18, 18, 18)
-                        .addComponent(closeButton)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(dateBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(monthBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(yearBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(25, 25, 25))
-        );
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
-        );
+        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/inventory/management/system/Consultation.png"))); // NOI18N
+        jLabel3.setText("jLabel3");
+        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1010, 580));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -359,7 +295,7 @@ public class LecturerConsultationSlots extends javax.swing.JFrame {
     // return the new ID
     try {
         int idNumber = Integer.parseInt(lastConsultationID.substring(1));
-        return "C00" + (idNumber + 1);
+        return String.format("C%03d", idNumber + 1);
     } catch (NumberFormatException e) {
         System.err.println("Invalid consultation ID format: " + lastConsultationID);
         return "C001";
@@ -369,50 +305,111 @@ public class LecturerConsultationSlots extends javax.swing.JFrame {
     // get all data and insert to table & txt file   
     private void setConsultationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setConsultationActionPerformed
         // TODO add your handling code here:
+        
+        if (jDateChooser.getDate() == null || 
+        timeBox.getSelectedIndex() == 0 || 
+        durationBox.getSelectedIndex() == 0 || 
+        locationBox.getSelectedIndex() == 0) {
+            JOptionPane.showMessageDialog(this, "All fields must be filled out!", "Input Error", JOptionPane.ERROR_MESSAGE);
+            consultationSlots.clearSelection();
+            return;
+        }
         consultationSlots.clearSelection();
-        String date = tfDate.getText().trim();
+//        String date = tfDate.getText().trim();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String date = dateFormat.format(jDateChooser.getDate());
         String time = (String) timeBox.getSelectedItem();
         String duration = (String) durationBox.getSelectedItem();
         String location = (String) locationBox.getSelectedItem();
         
+        if (date.isEmpty() || time.isEmpty() || duration.isEmpty() || location.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "All fields must be filled out!", "Input Error", JOptionPane.ERROR_MESSAGE);
+        consultationSlots.clearSelection();
+        return;
+    }
+
+        
         // Validate input fields
-        if (date.isEmpty() || timeBox.getSelectedIndex() == 0 || durationBox.getSelectedIndex() == 0 || locationBox.getSelectedIndex() == 0) {
-            JOptionPane.showMessageDialog(this, "All fields must be filled out!", "Input Error", JOptionPane.ERROR_MESSAGE);
+//        if (date.isEmpty() || timeBox.getSelectedIndex() == 0 || durationBox.getSelectedIndex() == 0 || locationBox.getSelectedIndex() == 0) {
+//            JOptionPane.showMessageDialog(this, "All fields must be filled out!", "Input Error", JOptionPane.ERROR_MESSAGE);
+//            return;
+//        }
+        
+        // Check if the selected date is in the past
+        LocalDate selectedDate;
+        try {
+            selectedDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            if (selectedDate.isBefore(LocalDate.now())) {
+                JOptionPane.showMessageDialog(this, "The selected date is in the past. You cannot create a consultation slot for past dates.", 
+                                              "Invalid Date", JOptionPane.ERROR_MESSAGE);
+//                tfDate.setText("");
+                jDateChooser.setDate(null);
+                timeBox.setSelectedIndex(0);
+                durationBox.setSelectedIndex(0);
+                locationBox.setSelectedIndex(0);
+                return;
+            }
+        } catch (DateTimeParseException e) {
+            JOptionPane.showMessageDialog(this, "Invalid date format. Please enter a valid date in 'yyyy-MM-dd' format.", 
+                                          "Date Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+    
+         // Check for duplicate consultation slot in the file
+        try (BufferedReader reader = new BufferedReader(new FileReader("consultations.txt"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] rowData = line.split(",");
+                if (rowData.length == 10 && rowData[3].equals(date) && rowData[4].equals(time)) {
+                    JOptionPane.showMessageDialog(this, "A consultation slot already exists for this date and time.", 
+                                                  "Duplicate Slot", JOptionPane.ERROR_MESSAGE);
+                    // tfDate.setText("");
+                    jDateChooser.setDate(null);
+                    timeBox.setSelectedIndex(0);
+                    durationBox.setSelectedIndex(0);
+                    locationBox.setSelectedIndex(0);
+                    return;  // Stop the process
+                }
+            }
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Error reading file: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-    // Generate a new Consultation ID (e.g., based on timestamp or row count)
-    String consultationID = newConsultationID("consultations.txt");
-    String status = "Available";
-    String lecturerID = this.lecturerID;
-    String studentID = ""; // Default empty for a new slot
-    String lecturerFeedback = ""; // Default empty
-    String studentFeedback = ""; // Default empty
+        // Generate a new Consultation ID (e.g., based on timestamp or row count)
+        String consultationID = newConsultationID("consultations.txt");
+        String status = "Available";
+        String lecturerID = this.lecturerID;
+        String studentID = ""; // empty
+        String lecturerFeedback = ""; // empty
+        String studentFeedback = ""; // empty
 
-    // Update the JTable
-    DefaultTableModel model = (DefaultTableModel) consultationSlots.getModel();
-    model.addRow(new Object[]{consultationID, lecturerID, studentID, date, time, duration, status, location});
+        // Update the JTable
+        DefaultTableModel model = (DefaultTableModel) consultationSlots.getModel();
+        model.addRow(new Object[]{consultationID, date, time, duration, status, location});
 
-    // Append the new row to the file
-    try (BufferedWriter writer = new BufferedWriter(new FileWriter("consultations.txt", true))) {
-        writer.write(consultationID + "," + lecturerID + "," + studentID + "," + date + "," + time + "," + duration + 
-                     "," + studentFeedback + "," + lecturerFeedback + "," + status + "," + location);
-        writer.newLine();
-        JOptionPane.showMessageDialog(this, "Consultation slot added successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
-    } catch (IOException e) {
-        JOptionPane.showMessageDialog(this, "Error writing to file: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-    }
+        // Append the new row to the file
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("consultations.txt", true))) {
+            writer.write(consultationID + "," + lecturerID + "," + studentID + "," + date + "," + time + "," + duration + 
+                        "," + studentFeedback + "," + lecturerFeedback + "," + status + "," + location);
+            writer.newLine();
+            JOptionPane.showMessageDialog(this, "Consultation slot added successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Error writing to file: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
 
-    // Clear the input fields after successful addition
-    tfDate.setText("");
-    timeBox.setSelectedIndex(0);
-    durationBox.setSelectedIndex(0);
-    locationBox.setSelectedIndex(0);
+        // Clear the input fields after successful addition
+        //tfDate.setText("");
+        jDateChooser.setDate(null);
+        timeBox.setSelectedIndex(0);
+        durationBox.setSelectedIndex(0);
+        locationBox.setSelectedIndex(0);
     }//GEN-LAST:event_setConsultationActionPerformed
 
+    
     // timeBox
     private void timeBoxValue() {
-        String[] timeSlot = {"Select Time Slot", "10:00","11:00","12:00","1:00","2:00","3:00","4:00","5:00"};
+        String[] timeSlot = {"Select Time Slot", "10:00","11:00","12:00","13:00","14:00","15:00","16:00","17:00"};
         timeBox.removeAllItems(); // remove all
         for (String time : timeSlot) {
             timeBox.addItem(time); // Add each time slot to the combo box
@@ -443,7 +440,9 @@ public class LecturerConsultationSlots extends javax.swing.JFrame {
 
     private void clearButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearButtonActionPerformed
         // TODO add your handling code here:
-        tfDate.setText("");
+        //tfDate.setText("");
+        consultationSlots.clearSelection();
+        jDateChooser.setDate(null);
         timeBox.setSelectedIndex(0);
         durationBox.setSelectedIndex(0);
         locationBox.setSelectedIndex(0);
@@ -559,19 +558,14 @@ public class LecturerConsultationSlots extends javax.swing.JFrame {
     private javax.swing.JButton clearButton;
     private javax.swing.JButton closeButton;
     private javax.swing.JTable consultationSlots;
-    private javax.swing.JComboBox<String> dateBox;
     private javax.swing.JButton deleteButton;
     private javax.swing.JComboBox<String> durationBox;
+    private com.toedter.calendar.JDateChooser jDateChooser;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JComboBox<String> locationBox;
-    private javax.swing.JComboBox<String> monthBox;
     private javax.swing.JButton setConsultation;
-    private javax.swing.JTextField tfDate;
     private javax.swing.JComboBox<String> timeBox;
-    private javax.swing.JComboBox<String> yearBox;
     // End of variables declaration//GEN-END:variables
 }
