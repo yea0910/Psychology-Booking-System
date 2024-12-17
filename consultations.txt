@@ -8,5 +8,5 @@ C006,L01,,2024-12-16,10:00,30,,,Available,Room 104
 C007,L02,,2024-12-17,11:00,30,,,Available,Room 105
 C008,L01,S01,2024-12-01,12:00,30,Great discussion,Well-prepared and professional,Past,Room 106
 C009,L04,S07,2024-12-02,09:00,30,Helpful and encouraging,Excellent support and guidance,Past,Room 107
-C010,L05,,2024-12-20,14:00,30,,,Available,Room 108
-C011,L05,S01,2024-12-20,14:00,30,,,Pending Approval,Room 109
+C010,L05,S01,2024-12-20,14:00,30,,,Pending,Room 108
+C011,L05,S01,2024-12-20,14:00,30,,,Pending,Room 109
